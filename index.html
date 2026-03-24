@@ -96,7 +96,7 @@
           const r = RRating;
           const movie = {title: t, genre: g, rating: r};
             
-      let movies = JSON.parse(localStorage.getItem('movies'));
+      let movies = JSON.parse(localStorage.getItem('movies')) || [];
       
       //replace already existing movies by checking if they have the same by checking if there is any matches to the movie title, which then replaces it with new values, but if it doesnt find a match, aka it doesnt find an index number it will js add a new movie thingy.
       const movie2= movies.findIndex(m => m.title === movie.title);
