@@ -70,7 +70,7 @@
       });
     });
 
-    function updateStars(Rrating) {
+    function updateStars(RRating) {
       document.querySelectorAll(".star").forEach(star => {
         star.classList.remove("star-selected");
         if (star.getAttribute("data-value") <= RRating) {
@@ -118,7 +118,7 @@
     const ratedMoviesDiv = document.getElementById('rated-movies');
       ratedMoviesDiv.innerHTML = '';
             
-     let movies = JSON.parse(localStorage.getItem('movies'));
+     let movies = JSON.parse(localStorage.getItem('movies')) || [];
          //this displays
     movies.forEach(movie => {
      let moviediv = document.createElement('div');
@@ -138,7 +138,7 @@
                 }
         });
     });
-        document.getElementById('delete').addEventListener('click', function() {
+        document.getElementById('delete1').addEventListener('click', function() {
          localStorage.removeItem('movies');
 
           displayMovies();
