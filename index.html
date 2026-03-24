@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Form</title>
+</head>
+<!-- Syles -->
+<style>
+    body{
+        margin:300px;
+        
+    }
+.star{
+    font-size: 30px;
+   
+    color: green;
+}
+.star-selected{
+    color: yellow;
+}
+.star:hover{
+    color: gold;
+    
+}
+ .submitbutton{
+        background-color: green;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+<body>
+    <!-- form -->
+  <h2>Add a Movie</h2>
+  <form id="moviestuff">
+    <label for="title">Movie Title:</label><br>
+    <input type="text" id="title" required><br><br>
+
+    <label for="genre">Genre:</label><br>
+    <select id="genre" required>
+      <option value="Action">Action</option>
+       <option value="Drama">Drama</option>
+      <option value="Comedy">Comedy</option>
+      <option value="Horror">Horror</option>
+      <option value="Anime">Anime</option>
+
+    </select><br><br>
+     <label for="Rating">Rating:</label><br>
+      <span class="star" data-value="1">&#9734;</span>
+          <span class="star" data-value="2">&#9734;</span>
+              <span class="star" data-value="3">&#9734;</span>
+                  <span class="star" data-value="4">&#9734;</span>
+                        <span class="star" data-value="5">&#9734;</span>
+                        <br><br>               
+  <button class="submitbutton" type="submit">Add Movie</button>
+    </form>
+    <h1>Movies Rated:</h1>
+    <div id="rated-movies"></div>
+
+
+    <script>
+          let RRating = 0;
+
+    // Handle star clicks
+    document.querySelectorAll(".star").forEach(star => {
+      star.addEventListener("click", function() {
+        RRating = this.getAttribute("data-value");
+        updateStars(RRating);
+      });
+    });
+
+    function updateStars(Rrating) {
+      document.querySelectorAll(".star").forEach(star => {
+        star.classList.remove("star-selected");
+        if (star.getAttribute("data-value") <= RRating) {
+          star.classList.add("star-selected");
+        }
+      });
+    }
+
+
+
+
+
+
+
+
+
+//adds movie by getting the values from the form and putting them in an object, then putthing them in local storage
+       
+        document.getElementById('moviestuff').addEventListener('submit', function(event) {
+         event.preventDefault(); 
+        const t = document.getElementById('title').value;
+         const g = document.getElementById('genre').value;
+          const r = RRating;
+          const movie = {title: t, genre: g, rating: r};
+            
+      let movies = JSON.parse(localStorage.getItem('movies'));
+      
+      //replace already existing movies by checking if they have the same by checking if there is any matches to the movie title, which then replaces it with new values, but if it doesnt find a match, aka it doesnt find an index number it will js add a new movie thingy.
+      const movie2= movies.findIndex(m => m.title === movie.title);
+      let a = 1;
+      if (movie2 >= 0) {
+        movies[movie2] = movie; 
+      } 
+      else{
+        movies.push(movie);
+      }
+    
+      
+      localStorage.setItem('movies', JSON.stringify(movies));
+            
+           displayMovies();
+        });
+        
+        function displayMovies() {
+    const ratedMoviesDiv = document.getElementById('rated-movies');
+      ratedMoviesDiv.innerHTML = '';
+            
+     let movies = JSON.parse(localStorage.getItem('movies'));
+         //this displays
+    movies.forEach(movie => {
+     let moviediv = document.createElement('div');
+       moviediv.innerHTML = `<h3>${movie.title}</h3><p>Genre: ${movie.genre}</p><p>Rating: ${movie.rating} stars</p> <button id="delete1" class="submitbutton" dataindex="${movies.indexOf(movie)}">Delete movies</button>`;
+         ratedMoviesDiv.appendChild(moviediv);
+            });
+            //delete
+    document.querySelectorAll('[id="delete1"]').forEach(button => {
+     button.addEventListener('click', function() {
+      let y = confirm('Are you sure you want to delete this movie?');
+        if (!y) return;
+         if (y) {
+          let x = parseInt(this.getAttribute('dataindex'));
+           movies.splice(x, 1);
+            localStorage.setItem('movies', JSON.stringify(movies));
+             displayMovies();
+                }
+        });
+    });
+        document.getElementById('delete').addEventListener('click', function() {
+         localStorage.removeItem('movies');
+
+          displayMovies();
+        });
+    }
+        displayMovies();
+    
+    </script>
+</body>
+</html>
